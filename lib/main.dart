@@ -42,6 +42,14 @@ class _MyHomePageState extends State<MyHomePage> {
       setState(() {
         playerState = s;
       });
+
+      if (playerState == PlayerState.completed) {
+        setState(() {
+          basicPhrases.forEach((element) {
+            element.isToggled = false;
+          });
+        });
+      }
     });
   }
 
@@ -50,37 +58,27 @@ class _MyHomePageState extends State<MyHomePage> {
         romanianText: 'salut',
         germanText: 'salut (Germana)',
         isToggled: false,
-        audioPath: "01.mp3"),
+        romanianAudioPath: "01.mp3",
+        germanAudioPath: "02.mp3"),
     PhraseModel(
         romanianText: 'mă numesc',
         germanText: 'mă numesc (Germana)',
         isToggled: false,
-        audioPath: "02.mp3"),
+        romanianAudioPath: "03.mp3",
+        germanAudioPath: "04.mp3"),
     PhraseModel(
         romanianText: 'cum ești',
         germanText: 'cum ești (Germana)',
         isToggled: false,
-        audioPath: "03.mp3"),
+        romanianAudioPath: "05.mp3",
+        germanAudioPath: "06.mp3"),
     PhraseModel(
         romanianText: 'ce faci',
         germanText: 'ce faci (Germana)',
         isToggled: false,
-        audioPath: "04.mp3"),
+        romanianAudioPath: "07.mp3",
+        germanAudioPath: "08.mp3"),
   ];
-
-  void _flipCard(index) {
-    setState(() {
-      basicPhrases[index].isToggled = !basicPhrases[index].isToggled;
-    });
-  }
-
-  Widget _buildBack(PhraseModel phrase) {
-    return Center(child: CircularProgressIndicator(color: Colors.green));
-  }
-
-  Widget _buildFront(PhraseModel phrase) {
-    return Center(child: Text(phrase.romanianText));
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -104,14 +102,19 @@ class _MyHomePageState extends State<MyHomePage> {
                               aspectRatio: 1,
                               child: GestureDetector(
                                   onTapDown: (details) {
-                                    setState(() {
-                                      basicPhrases[index].isToggled =
-                                          !basicPhrases[index].isToggled;
-                                    });
+                                    if (playerState != PlayerState.playing) {
+                                      setState(() {
+                                        basicPhrases[index].isToggled =
+                                            !basicPhrases[index].isToggled;
+                                      });
+                                    }
                                   },
                                   onTapUp: (details) {
-                                    player.play(AssetSource(
-                                        basicPhrases[index].audioPath));
+                                    if (playerState != PlayerState.playing) {
+                                      player.play(AssetSource(
+                                          basicPhrases[index]
+                                              .romanianAudioPath));
+                                    }
                                   },
                                   child: Container(
                                     margin: const EdgeInsets.all(20),
@@ -128,30 +131,57 @@ class _MyHomePageState extends State<MyHomePage> {
                                             ]),
                                         borderRadius:
                                             BorderRadius.circular(30)),
-                                    child: playerState == PlayerState.playing
-                                        ? _buildBack(basicPhrases[index])
-                                        : _buildFront(basicPhrases[index]),
+                                    child: playerState == PlayerState.playing &&
+                                            basicPhrases[index].isToggled
+                                        ? const Center(
+                                            child: CircularProgressIndicator(
+                                                color: Colors.green))
+                                        : Center(
+                                            child: Text(basicPhrases[index]
+                                                .romanianText)),
                                   )))),
                       Expanded(
                           child: AspectRatio(
                               aspectRatio: 1,
-                              child: Container(
-                                margin: const EdgeInsets.all(20),
-                                decoration: BoxDecoration(
-                                    gradient: LinearGradient(
-                                        begin: Alignment.bottomLeft,
-                                        colors: [
-                                          Theme.of(context).colorScheme.primary,
-                                          Theme.of(context)
-                                              .colorScheme
-                                              .onPrimary
-                                        ]),
-                                    borderRadius: BorderRadius.circular(30)),
-                                child: Center(
-                                    child: Text(
-                                  basicPhrases[index].romanianText,
-                                )),
-                              ))),
+                              child: GestureDetector(
+                                  onTapDown: (details) {
+                                    if (playerState != PlayerState.playing) {
+                                      setState(() {
+                                        basicPhrases[index].isToggled =
+                                            !basicPhrases[index].isToggled;
+                                      });
+                                    }
+                                  },
+                                  onTapUp: (details) {
+                                    if (playerState != PlayerState.playing) {
+                                      player.play(AssetSource(
+                                          basicPhrases[index].germanAudioPath));
+                                    }
+                                  },
+                                  child: Container(
+                                    margin: const EdgeInsets.all(20),
+                                    decoration: BoxDecoration(
+                                        gradient: LinearGradient(
+                                            begin: Alignment.bottomLeft,
+                                            colors: [
+                                              Theme.of(context)
+                                                  .colorScheme
+                                                  .onPrimary,
+                                              Theme.of(context)
+                                                  .colorScheme
+                                                  .primary
+                                            ]),
+                                        borderRadius:
+                                            BorderRadius.circular(30)),
+                                    child: playerState == PlayerState.playing &&
+                                            basicPhrases[index].isToggled
+                                        ? const Center(
+                                            child: CircularProgressIndicator(
+                                                color: Colors.green))
+                                        : Center(
+                                            child: Text(basicPhrases[index]
+                                                .germanText)),
+                                  )))),
                     ],
                   )
                 ]));
@@ -164,11 +194,13 @@ class PhraseModel {
   String romanianText;
   String germanText;
   bool isToggled = false;
-  String audioPath;
+  String germanAudioPath;
+  String romanianAudioPath;
 
   PhraseModel(
       {required this.romanianText,
       required this.germanText,
       required this.isToggled,
-      required this.audioPath});
+      required this.romanianAudioPath,
+      required this.germanAudioPath});
 }
