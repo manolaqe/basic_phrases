@@ -46,7 +46,8 @@ class _MyHomePageState extends State<MyHomePage> {
       if (playerState == PlayerState.completed) {
         setState(() {
           basicPhrases.forEach((element) {
-            element.isToggled = false;
+            element.romanianIsToggled = false;
+            element.germanIsToggled = false;
           });
         });
       }
@@ -57,25 +58,29 @@ class _MyHomePageState extends State<MyHomePage> {
     PhraseModel(
         romanianText: 'salut',
         germanText: 'salut (Germana)',
-        isToggled: false,
+        romanianIsToggled: false,
+        germanIsToggled: false,
         romanianAudioPath: "01.mp3",
         germanAudioPath: "02.mp3"),
     PhraseModel(
         romanianText: 'mă numesc',
         germanText: 'mă numesc (Germana)',
-        isToggled: false,
+        romanianIsToggled: false,
+        germanIsToggled: false,
         romanianAudioPath: "03.mp3",
         germanAudioPath: "04.mp3"),
     PhraseModel(
         romanianText: 'cum ești',
         germanText: 'cum ești (Germana)',
-        isToggled: false,
+        romanianIsToggled: false,
+        germanIsToggled: false,
         romanianAudioPath: "05.mp3",
         germanAudioPath: "06.mp3"),
     PhraseModel(
         romanianText: 'ce faci',
         germanText: 'ce faci (Germana)',
-        isToggled: false,
+        romanianIsToggled: false,
+        germanIsToggled: false,
         romanianAudioPath: "07.mp3",
         germanAudioPath: "08.mp3"),
   ];
@@ -104,8 +109,9 @@ class _MyHomePageState extends State<MyHomePage> {
                                   onTapDown: (details) {
                                     if (playerState != PlayerState.playing) {
                                       setState(() {
-                                        basicPhrases[index].isToggled =
-                                            !basicPhrases[index].isToggled;
+                                        basicPhrases[index].romanianIsToggled =
+                                            !basicPhrases[index]
+                                                .romanianIsToggled;
                                       });
                                     }
                                   },
@@ -132,7 +138,8 @@ class _MyHomePageState extends State<MyHomePage> {
                                         borderRadius:
                                             BorderRadius.circular(30)),
                                     child: playerState == PlayerState.playing &&
-                                            basicPhrases[index].isToggled
+                                            basicPhrases[index]
+                                                .romanianIsToggled
                                         ? const Center(
                                             child: CircularProgressIndicator(
                                                 color: Colors.green))
@@ -147,8 +154,9 @@ class _MyHomePageState extends State<MyHomePage> {
                                   onTapDown: (details) {
                                     if (playerState != PlayerState.playing) {
                                       setState(() {
-                                        basicPhrases[index].isToggled =
-                                            !basicPhrases[index].isToggled;
+                                        basicPhrases[index].germanIsToggled =
+                                            !basicPhrases[index]
+                                                .germanIsToggled;
                                       });
                                     }
                                   },
@@ -174,7 +182,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                         borderRadius:
                                             BorderRadius.circular(30)),
                                     child: playerState == PlayerState.playing &&
-                                            basicPhrases[index].isToggled
+                                            basicPhrases[index].germanIsToggled
                                         ? const Center(
                                             child: CircularProgressIndicator(
                                                 color: Colors.green))
@@ -193,14 +201,16 @@ class _MyHomePageState extends State<MyHomePage> {
 class PhraseModel {
   String romanianText;
   String germanText;
-  bool isToggled = false;
+  bool romanianIsToggled = false;
+  bool germanIsToggled = false;
   String germanAudioPath;
   String romanianAudioPath;
 
   PhraseModel(
       {required this.romanianText,
       required this.germanText,
-      required this.isToggled,
+      required this.romanianIsToggled,
+      required this.germanIsToggled,
       required this.romanianAudioPath,
       required this.germanAudioPath});
 }
