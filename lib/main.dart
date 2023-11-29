@@ -45,13 +45,19 @@ class _MyHomePageState extends State<MyHomePage> {
 
       if (playerState == PlayerState.completed) {
         setState(() {
-          basicPhrases.forEach((element) {
-            element.romanianIsToggled = false;
-            element.germanIsToggled = false;
-          });
+          for (var i = 0; i < basicPhrases.length; i++) {
+            basicPhrases[i].romanianIsToggled = false;
+            basicPhrases[i].germanIsToggled = false;
+          }
         });
       }
     });
+  }
+
+  @override
+  void dispose() {
+    player.dispose();
+    super.dispose();
   }
 
   List<PhraseModel> basicPhrases = [
@@ -144,8 +150,13 @@ class _MyHomePageState extends State<MyHomePage> {
                                             child: CircularProgressIndicator(
                                                 color: Colors.green))
                                         : Center(
-                                            child: Text(basicPhrases[index]
-                                                .romanianText)),
+                                            child: Text(
+                                            basicPhrases[index].romanianText,
+                                            textAlign: TextAlign.center,
+                                            style: const TextStyle(
+                                                fontWeight: FontWeight.w300,
+                                                fontSize: 20),
+                                          )),
                                   )))),
                       Expanded(
                           child: AspectRatio(
@@ -174,10 +185,10 @@ class _MyHomePageState extends State<MyHomePage> {
                                             colors: [
                                               Theme.of(context)
                                                   .colorScheme
-                                                  .onPrimary,
+                                                  .primary,
                                               Theme.of(context)
                                                   .colorScheme
-                                                  .primary
+                                                  .onPrimary
                                             ]),
                                         borderRadius:
                                             BorderRadius.circular(30)),
@@ -187,8 +198,13 @@ class _MyHomePageState extends State<MyHomePage> {
                                             child: CircularProgressIndicator(
                                                 color: Colors.green))
                                         : Center(
-                                            child: Text(basicPhrases[index]
-                                                .germanText)),
+                                            child: Text(
+                                            textAlign: TextAlign.center,
+                                            basicPhrases[index].germanText,
+                                            style: const TextStyle(
+                                                fontWeight: FontWeight.w300,
+                                                fontSize: 20),
+                                          )),
                                   )))),
                     ],
                   )
